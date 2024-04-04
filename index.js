@@ -59,6 +59,28 @@ app.get('/Usuarios',(req, res)=>
     });
 });
 
+app.get('/Usuario/:CorreoElectronico/:Contraseña',(req, res)=>{
+    const {CorreoElectronico, Contraseña} = req.params;
+
+        dbConfig.query('SELECT * FROM Usuarios WHERE CorreoElectronico = ? AND Contraseña = ?',[CorreoElectronico,Contraseña],(error, results)=>{
+            if(error)
+            {
+                console.error('Ocurrio un error al obtner especificamente a un usuario');
+                res.status(500).json({message:"Ocurrio un error al obtner especificamente a un usuario"});
+            }
+            else if(results.affectedRows === 0)
+            {
+                console.log("No se encontro el usuario deseado");
+                res.status(404).json({message: "Usuario no encontrado"});
+            }
+            else
+            {
+                console.log("Usuario encontrado exitosamente");
+                res.status(200).json(results);
+            }
+    });
+});
+
 app.post('/Usuario', (req, res)=>{
     console.log(req.body);
     const {Nombre, CorreoElectronico, Contraseña} = req.body;
